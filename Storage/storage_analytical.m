@@ -1,0 +1,45 @@
+% Parameters
+Vi = 10;        % Initial volume or offset
+A = 2;          % Amplitude coefficient
+B = 5;          % Period scaling factor for slow oscillation
+C1 = 1;         % Linear coefficient 1
+C2 = 0.5;       % Linear coefficient 2
+
+% Extract numerical solution from Simulink (timeseries)
+numerical_time = out.yout{1}.Values.Time; % Time points from Simulink
+numerical_Vs = out.yout{1}.Values.Data;   % Numerical solution values
+
+% Compute analytical Vs(t) at numerical time points
+Vs = Vi + A*(B-1) - A*B*cos(numerical_time/B) + A*cos(numerical_time) + (C1 - C2)*numerical_time;
+
+% Compute error
+error = Vs - numerical_Vs;
+
+% Create figure with two subplots
+figure;
+
+% Subplot 1: Analytical vs Numerical Solutions
+subplot(2, 1, 1);
+plot(numerical_time, Vs, 'b-', 'LineWidth', 2);
+hold on;
+plot(numerical_time, numerical_Vs, 'r--', 'LineWidth', 2);
+hold off;
+
+% Add labels and title
+xlabel('Time (t)');
+ylabel('V_s(t)');
+title('Comparison of Analytical and Numerical Solutions');
+set(gca, 'FontSize', 12);
+
+% Legend
+legend({'Analytical', 'Numerical'}, 'Location', 'best', 'FontSize', 10);
+
+% Subplot 2: Error Plot
+subplot(2, 1, 2);
+plot(numerical_time, error, 'k-', 'LineWidth', 2);
+
+% Add labels and title
+xlabel('Time (t)');
+ylabel('Error (Analytical - Numerical)');
+title('Error Between Analytical and Numerical Solutions');
+set(gca, 'FontSize', 12);
