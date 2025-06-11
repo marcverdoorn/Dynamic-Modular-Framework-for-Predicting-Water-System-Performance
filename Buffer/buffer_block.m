@@ -3,11 +3,9 @@ function buffer_block(block)
 end
 
 function setup(block)
-    % Register number of ports
     block.NumInputPorts  = 3;  % inflow, consumption, maxflow
     block.NumOutputPorts = 3;  % outflow, storage leve, storage size
     
-    % Set port names and widths
     block.InputPort(1).DatatypeID  = 0;  % double
     block.InputPort(1).Complexity  = 'Real';
     block.InputPort(1).Dimensions  = 1;
@@ -35,17 +33,13 @@ function setup(block)
     block.OutputPort(3).Complexity  = 'Real';
     block.OutputPort(3).Dimensions  = 1;
     
-    % Register parameters (storage_size)
     block.NumDialogPrms = 1;
-    block.DialogPrmsTunable = {'Tunable'};  % Correct syntax
+    block.DialogPrmsTunable = {'Tunable'};  
 
-    % Register continuous state for stored volume
-    block.NumContStates = 1;  % Stored volume as a state
-    
-    % Set sample time (continuous)
+    block.NumContStates = 1; 
+
     block.SampleTimes = [0 0];
     
-    % Register methods
     block.RegBlockMethod('PostPropagationSetup', @PostPropSetup);
     block.RegBlockMethod('InitializeConditions', @Init);
     block.RegBlockMethod('Outputs', @Outputs);
@@ -80,11 +74,11 @@ function PostPropSetup(block)
     minlength = stop_time/step_size;
 
     block.Dwork(4).Name = 'log_time';
-    block.Dwork(4).Dimensions = minlength+10; % Adjust size based on needs
+    block.Dwork(4).Dimensions = minlength+10; 
     block.Dwork(4).DatatypeID = 0;
     block.Dwork(4).Complexity = 'Real';
     block.Dwork(5).Name = 'log_level';
-    block.Dwork(5).Dimensions = minlength+10; % Same size as log_time
+    block.Dwork(5).Dimensions = minlength+10; 
     block.Dwork(5).DatatypeID = 0;
     block.Dwork(5).Complexity = 'Real';
     block.Dwork(6).Name = 'log_counter';
@@ -92,11 +86,11 @@ function PostPropSetup(block)
     block.Dwork(6).DatatypeID = 0;
     block.Dwork(6).Complexity = 'Real';
     block.Dwork(7).Name = 'log_overflow';
-    block.Dwork(7).Dimensions = minlength+10; % Same size as log_time
+    block.Dwork(7).Dimensions = minlength+10; 
     block.Dwork(7).DatatypeID = 0;
     block.Dwork(7).Complexity = 'Real';
     block.Dwork(8).Name = 'log_outflow';
-    block.Dwork(8).Dimensions = minlength+10; % Adjust size based on needs
+    block.Dwork(8).Dimensions = minlength+10; 
     block.Dwork(8).DatatypeID = 0;
     block.Dwork(8).Complexity = 'Real';
 end

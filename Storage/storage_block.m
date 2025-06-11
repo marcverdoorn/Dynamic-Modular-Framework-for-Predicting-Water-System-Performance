@@ -4,7 +4,7 @@ end
 
 function setup(block)
     block.NumDialogPrms = 3;
-    block.DialogPrmsTunable = {'Tunable', 'Tunable', 'Tunable'};  % Correct syntax
+    block.DialogPrmsTunable = {'Tunable', 'Tunable', 'Tunable'};  
     
     
     storage_interconnect = block.DialogPrm(3).Data;
@@ -36,12 +36,10 @@ function setup(block)
         block.OutputPort(i).Dimensions  = 1; 
     end
 
-    % Register continuous state for stored volume
-    block.NumContStates = 1;  % Stored volume as a state
+    block.NumContStates = 1;  
 
     block.SampleTimes = [-1 0];
-    
-    % Register methods
+
     block.RegBlockMethod('PostPropagationSetup', @PostPropSetup); 
     block.RegBlockMethod('InitializeConditions', @Init);
     block.RegBlockMethod('Derivatives', @Derivatives);
@@ -55,7 +53,7 @@ function PostPropSetup(block)
     storage_interconnect = block.DialogPrm(3).Data;
 
     if storage_interconnect == 1
-        block.NumDworks = 8; % For consumption_main, consumptionSIC1, consumptionSIC2
+        block.NumDworks = 8; 
     elseif storage_interconnect == 2
         block.NumDworks = 10;
     else
@@ -81,7 +79,7 @@ function PostPropSetup(block)
     minlength = stop_time/step_size;
 
     block.Dwork(4).Name = 'log_time';
-    block.Dwork(4).Dimensions = minlength+10; % Adjust size based on needs
+    block.Dwork(4).Dimensions = minlength+10;
     block.Dwork(4).DatatypeID = 0;
     block.Dwork(4).Complexity = 'Real';
     block.Dwork(5).Name = 'log_level';
@@ -135,7 +133,6 @@ function Init(block)
     init_level = block.DialogPrm(2).Data;
     storage_size = block.DialogPrm(1).Data;
     init_volume = init_level * storage_size;
-    % Clamp initial volume between 0 and storage_size
     init_volume = max(0, min(storage_size, init_volume));
     block.ContStates.Data = init_volume;
 
@@ -182,7 +179,7 @@ function Derivatives(block)
     stored_volume = block.ContStates.Data;
 
     total_consumption = consumption_main + consumptionSIC1 + consumptionSIC2;
-    volume_requested = total_consumption * Ts;                          % Volume needed for the time step
+    volume_requested = total_consumption * Ts;                          
 
     if stored_volume < volume_requested && stored_volume > 0
         available_consumption = stored_volume / Ts; 
@@ -202,11 +199,9 @@ function Derivatives(block)
     block.Dwork(2).Data = consumptionSIC1;
     block.Dwork(3).Data = consumptionSIC2;
 
-    % Compute derivative
     total_consumption = consumption_main + consumptionSIC1 + consumptionSIC2;
     dVdt = inflow - total_consumption;
 
-    % Clamp derivative to prevent negative volume
     if stored_volume <= 0 && dVdt < 0
         dVdt = inflow;  
     end
@@ -238,8 +233,8 @@ end
 
 function Outputs(block)
     counter = max(1, block.Dwork(6).Data);
-    storage_level = block.Dwork(5).Data(counter);       %storage level, zoals geregistreerd in derivative function
-    storage_size = block.DialogPrm(1).Data;             %deze manier verzekerd correct stored volume, voordat de dvdt is toegepast
+    storage_level = block.Dwork(5).Data(counter);       
+    storage_size = block.DialogPrm(1).Data;             
     stored_volume = storage_level*storage_size;
     storage_size = block.DialogPrm(1).Data;
 
@@ -249,7 +244,6 @@ function Outputs(block)
     consumptionSIC1  = block.Dwork(2).Data;
     consumptionSIC2  = block.Dwork(3).Data;
 
-    % Clamp inputs to non-negative values
    if stored_volume > 0
         outflow_main = consumption_main;
         outflow_SIC1 = consumptionSIC1;

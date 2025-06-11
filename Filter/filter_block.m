@@ -3,8 +3,8 @@ function filter_block(block)
 end
 
 function setup(block)
-    block.NumInputPorts  = 1;  % inflow, consumption, maxflow
-    block.NumOutputPorts = 2;  % outflow, storage leve, storage size
+    block.NumInputPorts  = 1;  
+    block.NumOutputPorts = 2; 
  
     block.InputPort(1).DatatypeID  = 0;  % double
     block.InputPort(1).Complexity  = 'Real';
@@ -20,10 +20,10 @@ function setup(block)
     block.OutputPort(2).Dimensions  = 1;
 
     block.NumDialogPrms = 4;
-    block.DialogPrmsTunable = {'Tunable', 'Tunable','Tunable', 'Tunable'};  % Correct syntax
+    block.DialogPrmsTunable = {'Tunable', 'Tunable','Tunable', 'Tunable'};  
 
 
-    block.NumContStates = 0;  % Stored volume as a state
+    block.NumContStates = 0; 
 
     block.SampleTimes = [0 0];
     

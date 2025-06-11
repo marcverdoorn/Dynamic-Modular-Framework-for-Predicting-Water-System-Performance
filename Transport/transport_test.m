@@ -1,6 +1,6 @@
 % Pipe transport test
 diameter = 1;
-dP = 10e5; % Pressure drop (Pa)
+dP = 10e5; 
 elevation = 10;
 dist = 20000;
 
@@ -17,11 +17,9 @@ V = 1; % Initial velocity (m/s)
 tol = 1e-6; % Convergence tolerance (m/s)
 maxIter = 100; % Maximum iterations
 
-% Arrays to store friction factor and iteration count
 f_values = zeros(1, maxIter);
 iter = 1:maxIter;
 
-% Iterative loop
 for i = 1:maxIter
     V_old = V;
     Re = rho * diameter * V / mu;
@@ -37,14 +35,12 @@ for i = 1:maxIter
         disp("regime 3")
     end
     
-    % Store friction factor
     f_values(i) = f;
     
     V = sqrt(2 * diameter * dPtot / (f * dist * rho));
     
-    % Check convergence
     if abs(V - V_old) < tol
-        f_values = f_values(1:i); % Trim array to converged length
+        f_values = f_values(1:i); 
         iter = 1:i;
         break;
     end
@@ -56,7 +52,6 @@ end
 
 Qmax = (0.5 * diameter)^2 * pi * V * 60 * 60;
 
-% Plot convergence of friction factor
 figure;
 plot(iter, f_values, '-o', 'LineWidth', 2, 'MarkerSize', 6);
 xlabel('Iteration');

@@ -3,16 +3,13 @@ function transport_block(block)
 end
 
 function setup(block)
-    % Register number of ports
-
     flowdirection = block.DialogPrm(2).Data;
     transtype = block.DialogPrm(4).Data;
 
     if flowdirection == 1 || transtype == 2
-        block.NumInputPorts  = 1;  % inflow
-        block.NumOutputPorts = 2;  % outflow, maxflow
+        block.NumInputPorts  = 1; 
+        block.NumOutputPorts = 2;  
     
-        % Set port names and widths
         block.InputPort(1).DatatypeID  = 0;  % double
         block.InputPort(1).Complexity  = 'Real';
         block.InputPort(1).Dimensions  = 1;
@@ -26,10 +23,9 @@ function setup(block)
         block.OutputPort(2).Complexity  = 'Real';
         block.OutputPort(2).Dimensions  = 1;
     else
-        block.NumInputPorts  = 2;  % inflow
-        block.NumOutputPorts = 4;  % outflow, maxflow
+        block.NumInputPorts  = 2;  
+        block.NumOutputPorts = 4;  
     
-        % Set port names and widths
         block.InputPort(1).DatatypeID  = 0;  % double
         block.InputPort(1).Complexity  = 'Real';
         block.InputPort(1).Dimensions  = 1;
@@ -57,17 +53,13 @@ function setup(block)
         block.OutputPort(4).Dimensions  = 1;
     end
     
-    % Register parameters (storage_size)
     block.NumDialogPrms = 17;
     block.DialogPrmsTunable = {'Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable','Tunable'};  % Correct syntax
 
-    % Register continuous state for stored volume
-    block.NumContStates = 0;  % Stored volume as a state
-    
-    % Set sample time (continuous)   
+    block.NumContStates = 0;  
+
     block.SampleTimes = [0 0];
     
-    % Register methods 
     block.RegBlockMethod('InitializeConditions', @Init);
     block.RegBlockMethod('Outputs', @Outputs);
     block.RegBlockMethod('Derivatives', @Derivatives);
