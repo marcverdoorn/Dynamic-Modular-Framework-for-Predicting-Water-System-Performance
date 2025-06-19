@@ -181,8 +181,8 @@ function Derivatives(block)
     total_consumption = consumption_main + consumptionSIC1 + consumptionSIC2;
     volume_requested = total_consumption * Ts;                          
 
-    if stored_volume < volume_requested && stored_volume > 0
-        available_consumption = stored_volume / Ts; 
+    if (stored_volume+Ts*inflow) < volume_requested && stored_volume > 0
+        available_consumption = (stored_volume / Ts)+inflow; 
         scaling_factor = available_consumption / total_consumption;
         consumption_main = consumption_main * scaling_factor;
         consumptionSIC1 = consumptionSIC1 * scaling_factor;
